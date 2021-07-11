@@ -43,8 +43,4 @@ public class AltitudeDecoder implements Decoder {
     public JSONObject getResult() {
         return root;
     }
-
-    private void put(String name, float value) {
-        root.put(name, String.format("%.2f", value));
-    }
 }

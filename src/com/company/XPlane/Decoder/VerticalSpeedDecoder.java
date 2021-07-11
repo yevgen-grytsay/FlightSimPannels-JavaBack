@@ -5,11 +5,9 @@ import com.company.XPlane.Packet;
 import org.json.simple.JSONObject;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 public class VerticalSpeedDecoder implements Decoder {
-    private Map<String, String> data;
+    private JSONObject root;
 
     @Override
     public String getName() {
@@ -18,7 +16,7 @@ public class VerticalSpeedDecoder implements Decoder {
 
     @Override
     public void reset() {
-        data = new HashMap<>();
+        root = new JSONObject();
     }
 
     @Override
@@ -26,22 +24,13 @@ public class VerticalSpeedDecoder implements Decoder {
         if (packet.isVerticalSpeed()) {
             FloatBuffer floatBuffer = packet.toFloatBuffer();
 
-            put("mach", floatBuffer.get(0));
-            put("speed", floatBuffer.get(2));
+            root.put("mach", String.format("%.2f", floatBuffer.get(0)));
+            root.put("speed", String.format("%.2f", floatBuffer.get(2)));
         }
     }
 
     @Override
     public JSONObject getResult() {
-        JSONObject root = new JSONObject();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            root.put(entry.getKey(), entry.getValue());
-        }
-
         return root;
-    }
-
-    private void put(String name, float value) {
-        data.put(name, String.format("%.2f", value));
     }
 }

@@ -1,10 +1,7 @@
 package com.company.XPlane;
 
 import com.company.Decoder;
-import com.company.XPlane.Decoder.AltitudeDecoder;
-import com.company.XPlane.Decoder.AttitudeDecoder;
-import com.company.XPlane.Decoder.SpeedsDecoder;
-import com.company.XPlane.Decoder.VerticalSpeedDecoder;
+import com.company.XPlane.Decoder.*;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -19,6 +16,7 @@ public class DecoderChain {
                 .add(new SpeedsDecoder())
                 .add(new VerticalSpeedDecoder())
                 .add(new AltitudeDecoder())
+                .add(new DgDecoder())
         ;
     }
 

@@ -6,12 +6,12 @@ import org.json.simple.JSONObject;
 
 import java.nio.FloatBuffer;
 
-public class AttitudeDecoder implements Decoder {
+public class DgDecoder implements Decoder {
     JSONObject root;
 
     @Override
     public String getName() {
-        return "attitude";
+        return "dg";
     }
 
     @Override
