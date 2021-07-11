@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.IOException;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,28 +16,56 @@ public class WebSocketServer extends NanoWSD {
     private static final Logger LOG = Logger.getLogger(WebSocketServer.class.getName());
 
     private final boolean debug;
+    private final Queue<String> bus;
 
-    public WebSocketServer(int port, boolean debug) {
+    public WebSocketServer(int port, boolean debug, Queue<String> bus) {
         super(port);
         this.debug = debug;
+        this.bus = bus;
     }
 
     @Override
     protected WebSocket openWebSocket(IHTTPSession handshake) {
-        return new DebugWebSocket(this, handshake);
+        return new DebugWebSocket(this, handshake, bus);
     }
 
     private static class DebugWebSocket extends WebSocket {
 
         private final WebSocketServer server;
+        private final Queue<String> bus;
 
-        public DebugWebSocket(WebSocketServer server, IHTTPSession handshakeRequest) {
+        public DebugWebSocket(WebSocketServer server, IHTTPSession handshakeRequest, Queue<String> bus) {
             super(handshakeRequest);
             this.server = server;
+            this.bus = bus;
         }
 
         @Override
         protected void onOpen() {
+            Runnable myRunnable = () -> {
+                while (true) {
+                    String message = bus.poll();
+                    if (message == null) {
+                        continue;
+                    }
+
+                    try {
+                        send(message);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+            Thread thread = new Thread(myRunnable);
+            thread.start();
+//            System.out.println("");
+//            try {
+//                send("sending");
+//                send("something");
+//                send("useful");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
         }
 
         @Override
