@@ -16,13 +16,12 @@ public class Packet {
 
     public static List<Packet> decode(DatagramPacket packet) {
         var data = packet.getData();
-        var length = data.length - 1;
+        var length = packet.getLength() - 5;
         var sentences = length / 36;
 
         var result = new ArrayList<Packet>();
         for (int i = 0; i < sentences; ++i) {
-//            var startIndex =
-            var sentence = Arrays.copyOfRange(data, i * 36 + 5, i * 36 + 5 + 36);
+            var sentence = Arrays.copyOfRange(data, i*36 + 5, i*36 + 36);
 
             var xtype = Byte.toUnsignedInt(sentence[0]);
             var dataref = Arrays.copyOfRange(sentence, 4, 36);
