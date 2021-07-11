@@ -24,7 +24,7 @@ public class Packet {
 //            var startIndex =
             var sentence = Arrays.copyOfRange(data, i * 36 + 5, i * 36 + 5 + 36);
 
-            var xtype = Integer.valueOf(sentence[0]);
+            var xtype = Byte.toUnsignedInt(sentence[0]);
             var dataref = Arrays.copyOfRange(sentence, 4, 36);
 
             result.add(new Packet(xtype, dataref));
