@@ -5,11 +5,9 @@ import com.company.XPlane.Packet;
 import org.json.simple.JSONObject;
 
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AltitudeDecoder implements Decoder {
-    private Map<String, String> data;
+    JSONObject root;
 
     @Override
     public String getName() {
@@ -18,7 +16,7 @@ public class AltitudeDecoder implements Decoder {
 
     @Override
     public void reset() {
-        data = new HashMap<>();
+        root = new JSONObject();
     }
 
     @Override
@@ -26,31 +24,27 @@ public class AltitudeDecoder implements Decoder {
         if (packet.xtype == 20) {
             FloatBuffer floatBuffer = packet.toFloatBuffer();
 
-            put("altitude", floatBuffer.get(5));
+            root.put("altitude", String.format("%.2f", floatBuffer.get(5)));
         }
 
         if (packet.xtype == 7) {
             FloatBuffer floatBuffer = packet.toFloatBuffer();
-//            put("baro", floatBuffer.get(0));
-//            put("mbar", floatBuffer.get(0) * 33.863886f);
+            float baro = floatBuffer.get(0);
+
             JSONObject pressures = new JSONObject();
-            pressures.put("baro", String.format("%.2f", floatBuffer.get(0)));
-            pressures.put("mbar", String.format("%.2f", floatBuffer.get(0) * 33.863886f));
-            data.put("pressures", pressures.toJSONString());
+            pressures.put("baro", String.format("%.2f", baro));
+            pressures.put("mbar", String.format("%.2f", baro * 33.863886f));
+
+            root.put("pressures", pressures);
         }
     }
 
     @Override
     public JSONObject getResult() {
-        JSONObject attitude = new JSONObject();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            attitude.put(entry.getKey(), entry.getValue());
-        }
-
-        return attitude;
+        return root;
     }
 
     private void put(String name, float value) {
-        data.put(name, String.format("%.2f", value));
+        root.put(name, String.format("%.2f", value));
     }
 }

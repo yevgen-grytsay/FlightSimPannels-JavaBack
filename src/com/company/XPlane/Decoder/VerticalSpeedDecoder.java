@@ -33,12 +33,12 @@ public class VerticalSpeedDecoder implements Decoder {
 
     @Override
     public JSONObject getResult() {
-        JSONObject attitude = new JSONObject();
+        JSONObject root = new JSONObject();
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            attitude.put(entry.getKey(), entry.getValue());
+            root.put(entry.getKey(), entry.getValue());
         }
 
-        return attitude;
+        return root;
     }
 
     private void put(String name, float value) {
