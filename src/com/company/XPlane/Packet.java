@@ -1,6 +1,9 @@
 package com.company.XPlane;
 
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +15,16 @@ public class Packet {
     public Packet(int xcode, byte[] dataref) {
         this.xtype = xcode;
         this.dataref = dataref;
+    }
+
+    public FloatBuffer toFloatBuffer() {
+        return ByteBuffer.wrap(dataref)
+                .order(ByteOrder.LITTLE_ENDIAN)
+                .asFloatBuffer();
+    }
+
+    public boolean isAttitude() {
+        return xtype == 17;
     }
 
     public static List<Packet> decode(DatagramPacket packet) {
@@ -30,5 +43,9 @@ public class Packet {
         }
 
         return result;
+    }
+
+    public boolean isSpeeds() {
+        return xtype == 3;
     }
 }
