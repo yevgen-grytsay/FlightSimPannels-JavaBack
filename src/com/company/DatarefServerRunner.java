@@ -1,10 +1,8 @@
 package com.company;
 
-import java.io.IOException;
-
-public class EchoServerRunner {
+public class DatarefServerRunner {
     public static void main(String[] args) {
-        var server = new EchoServer();
+        var server = new DatarefServer();
         server.start();
 //        try {
 //            server.join();

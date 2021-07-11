@@ -12,13 +12,13 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.List;
 
-public class EchoServer extends Thread {
+public class DatarefServer extends Thread {
 
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[1024];
 
-    public EchoServer() {
+    public DatarefServer() {
         try {
             socket = new DatagramSocket(49100);
         } catch (SocketException e) {
