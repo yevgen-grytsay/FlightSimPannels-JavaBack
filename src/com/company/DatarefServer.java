@@ -1,7 +1,5 @@
 package com.company;
 
-import com.company.XPlane.Decoder.SpeedsDecoder;
-import com.company.XPlane.Decoder.AttitudeDecoder;
 import com.company.XPlane.DecoderChain;
 import com.company.XPlane.Packet;
 import org.json.simple.JSONArray;
@@ -33,11 +31,7 @@ public class DatarefServer extends Thread {
     public void run() {
         running = true;
 
-        DecoderChain chain = new DecoderChain();
-        chain
-                .add(new AttitudeDecoder())
-                .add(new SpeedsDecoder())
-        ;
+        DecoderChain chain = DecoderChain.defaultChain();
 
         while (running) {
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -60,7 +54,7 @@ public class DatarefServer extends Thread {
             root.put("name", "data:measures");
             root.put("args", args);
 
-            System.out.println(root.toJSONString());
+//            System.out.println(root.toJSONString());
             try {
                 this.bus.add(root.toJSONString());
             } catch (IllegalStateException e) {

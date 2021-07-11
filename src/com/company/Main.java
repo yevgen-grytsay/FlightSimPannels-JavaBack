@@ -10,7 +10,7 @@ public class Main {
         DatarefServer datarefServer = new DatarefServer(q);
         datarefServer.start();
 
-        WebSocketServer webSocketServer = new WebSocketServer(3000, true, q);
+        WebSocketServer webSocketServer = new WebSocketServer(3001, true, q);
         webSocketServer.start();
 
     }

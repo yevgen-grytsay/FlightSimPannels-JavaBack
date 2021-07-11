@@ -7,9 +7,14 @@
 <body>
 
 <script>
-    var exampleSocket = new WebSocket("ws://localhost:3000");
+    var exampleSocket = new WebSocket("ws://localhost:3001");
     exampleSocket.onopen = function (event) {
       exampleSocket.send("Hello server!");
+
+      setInterval(function () {
+        exampleSocket.send("ping");
+      }, 500);
+
     };
 
     exampleSocket.onmessage = function (event) {

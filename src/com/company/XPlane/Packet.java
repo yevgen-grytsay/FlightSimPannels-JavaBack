@@ -48,4 +48,8 @@ public class Packet {
     public boolean isSpeeds() {
         return xtype == 3;
     }
+
+    public boolean isVerticalSpeed() {
+        return xtype == 4;
+    }
 }
