@@ -55,31 +55,10 @@ public class DatarefServer extends Thread {
             root.put("args", args);
 
 //            System.out.println(root.toJSONString());
-            try {
-                this.bus.add(root.toJSONString());
-            } catch (IllegalStateException e) {
-                System.out.println("Illegal queue state");
-            }
 
-//            this.bus.add(root.toJSONString());
-//            InetAddress address = packet.getAddress();
-//            int port = packet.getPort();
-//            packet = new DatagramPacket(buf, buf.length, address, port);
-//            MessageDecoder.decode(packet);
-//            String received
-//                    = new String(packet.getData(), 0, packet.getLength());
-//
-//            if (received.equals("end")) {
-//                running = false;
-//                continue;
-//            }
+            this.bus.add(root.toJSONString());
+            System.out.printf("Queue size: %d%n", bus.size());
 
-//            System.out.println(received);
-//            try {
-//                socket.send(packet);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
         }
         socket.close();
     }

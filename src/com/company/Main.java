@@ -7,6 +7,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ConcurrentLinkedQueue<String> q = new ConcurrentLinkedQueue();
 
+        new WebServer();
+
         DatarefServer datarefServer = new DatarefServer(q);
         datarefServer.start();
 
