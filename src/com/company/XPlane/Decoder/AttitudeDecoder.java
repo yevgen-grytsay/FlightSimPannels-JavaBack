@@ -32,7 +32,7 @@ public class AttitudeDecoder implements Decoder {
 
         if (packet.xtype == 18) {
             FloatBuffer floatBuffer = packet.toFloatBuffer();
-            var slip = floatBuffer.get(7);
+            float slip = floatBuffer.get(7);
             root.put("slip", String.format("%.2f", slip));
         }
     }

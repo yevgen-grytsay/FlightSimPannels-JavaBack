@@ -28,16 +28,16 @@ public class Packet {
     }
 
     public static List<Packet> decode(DatagramPacket packet) {
-        var data = packet.getData();
-        var length = packet.getLength() - 5;
-        var sentences = length / 36;
+        byte[] data = packet.getData();
+        int length = packet.getLength() - 5;
+        int sentences = length / 36;
 
-        var result = new ArrayList<Packet>();
+        ArrayList result = new ArrayList<Packet>();
         for (int i = 0; i < sentences; ++i) {
-            var sentence = Arrays.copyOfRange(data, i*36 + 5, i*36 + 36);
+            byte[] sentence = Arrays.copyOfRange(data, i*36 + 5, i*36 + 36);
 
-            var xtype = Byte.toUnsignedInt(sentence[0]);
-            var dataref = Arrays.copyOfRange(sentence, 4, 36);
+            int xtype = Byte.toUnsignedInt(sentence[0]);
+            byte[] dataref = Arrays.copyOfRange(sentence, 4, 36);
 
             result.add(new Packet(xtype, dataref));
         }

@@ -4,7 +4,7 @@ import java.util.concurrent.SynchronousQueue;
 
 public class DatarefServerRunner {
     public static void main(String[] args) {
-        var server = new DatarefServer(new SynchronousQueue<>());
+        DatarefServer server = new DatarefServer(new SynchronousQueue<>());
         server.start();
 //        try {
 //            server.join();
