@@ -1,10 +1,13 @@
 package com.company;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import fi.iki.elonen.NanoHTTPD;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 // NOTE: If you're using NanoHTTPD >= 3.0.0 the namespace is different,
 //       instead of the above import use the following:
 // import org.nanohttpd.NanoHTTPD;
@@ -33,6 +36,7 @@ public class WebServer extends NanoHTTPD {
         }
 
         String uri = session.getUri();
+        System.out.printf("Requested URI: %s\n", uri);
         String path;
         if (uri.equals("/")) {
             path = "/public/index.html";
@@ -42,20 +46,49 @@ public class WebServer extends NanoHTTPD {
 
         try {
 
-            URL resource = getClass().getClassLoader().getResource(path.substring(1));
-            File file = new File(resource.getFile());
-            String mimeType = Files.probeContentType(file.toPath());
+            String resourcePath = path.substring(1);
+            System.out.printf("Trying to read resource: %s\n", resourcePath);
+
+            URL resource = getClass().getClassLoader().getResource(resourcePath);
+            if (resource == null) {
+                System.err.printf("Resource is null: %s\n", resourcePath);
+            }
+
+            String mimeType = URLConnection.guessContentTypeFromName(path);
+            System.out.printf("Mime type of file '%s' is '%s'\n", path, mimeType);
 
             InputStream inputStream = getClass().getResourceAsStream(path);
-            return newFixedLengthResponse(Response.Status.OK, mimeType, inputStream, file.length());
+            if (inputStream == null) {
+                System.out.println("Input stream is null");
+                throw new RuntimeException(String.format("Can not open resource: %s", path));
+            }
+
+            byte[] targetArray = getBytes(inputStream);
+
+            return newFixedLengthResponse(Response.Status.OK, mimeType, new ByteInputStream(targetArray, targetArray.length), targetArray.length);
 
         } catch (Exception e) {
             String message = e.getMessage();
             if (message == null) {
                 message = "Unknown error";
             }
+            System.err.println(message);
 
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, message);
+            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "");
         }
+    }
+
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        buffer.flush();
+
+        return buffer.toByteArray();
     }
 }
